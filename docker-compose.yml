@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: cf-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: cf_test_db
+      MYSQL_USER: cfuser
+      MYSQL_PASSWORD: cfpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - cf-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ColdFusion Server
+  cf-test:
+    build: .
+    container_name: cf-test-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www
+    environment:
+      - LUCEE_SERVER_NAME=cf-test
+      - LUCEE_SERVER_PORT=8080
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=cf_test_db
+      - DB_USER=cfuser
+      - DB_PASSWORD=cfpassword
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - cf-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  mysql_data:
+
+networks:
+  cf-network:
+    driver: bridge 
