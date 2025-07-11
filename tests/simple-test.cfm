@@ -31,7 +31,7 @@
         <!--- Test test1-code_review.cfc compilation --->
         <h3>Testing test1-code_review.cfc compilation</h3>
         <cftry>
-            <cfset userComponent = createObject("component", "test1-code_review")>
+            <cfset userComponent = createObject("component", "components.test1-code_review")>
             <div class="pass">
                 <h4>✅ test1-code_review.cfc compilation PASSED</h4>
                 <p><strong>Component loaded successfully</strong></p>
@@ -53,7 +53,7 @@
         <!--- Test test2-bug.cfc compilation --->
         <h3>Testing test2-bug.cfc compilation</h3>
         <cftry>
-            <cfset bugComponent = createObject("component", "test2-bug")>
+            <cfset bugComponent = createObject("component", "components.test2-bug")>
             <div class="pass">
                 <h4>✅ test2-bug.cfc compilation PASSED</h4>
                 <p><strong>Component loaded successfully</strong></p>
@@ -74,7 +74,7 @@
         <!--- Test test3-performance.cfc compilation --->
         <h3>Testing test3-performance.cfc compilation</h3>
         <cftry>
-            <cfset perfComponent = createObject("component", "test3-performance")>
+            <cfset perfComponent = createObject("component", "components.test3-performance")>
             <div class="pass">
                 <h4>✅ test3-performance.cfc compilation PASSED</h4>
                 <p><strong>Component loaded successfully</strong></p>
@@ -98,9 +98,9 @@
         <h2>Test 2: Function Signature Validation</h2>
         
         <cftry>
-            <cfset userComponent = createObject("component", "test1-code_review")>
-            <cfset bugComponent = createObject("component", "test2-bug")>
-            <cfset perfComponent = createObject("component", "test3-performance")>
+            <cfset userComponent = createObject("component", "components.test1-code_review")>
+            <cfset bugComponent = createObject("component", "components.test2-bug")>
+            <cfset perfComponent = createObject("component", "components.test3-performance")>
             
             <!--- Check function signatures --->
             <cfset userFunctions = getMetadata(userComponent).functions>
@@ -144,9 +144,9 @@
         
         <cftry>
             <!--- Test that components can be instantiated without errors --->
-            <cfset userComponent = createObject("component", "test1-code_review")>
-            <cfset bugComponent = createObject("component", "test2-bug")>
-            <cfset perfComponent = createObject("component", "test3-performance")>
+            <cfset userComponent = createObject("component", "components.test1-code_review")>
+            <cfset bugComponent = createObject("component", "components.test2-bug")>
+            <cfset perfComponent = createObject("component", "components.test3-performance")>
             
             <div class="pass">
                 <h4>✅ Syntax Validation PASSED</h4>
@@ -172,7 +172,7 @@
         
         <cftry>
             <!--- Test that the SQL injection fix is in place by checking the source code --->
-            <cfset sourceCode = fileRead(expandPath("test1-code_review.cfc"))>
+            <cfset sourceCode = fileRead(expandPath("../components/test1-code_review.cfc"))>
             
             <cfif findNoCase("UserName = :username", sourceCode)>
                 <div class="pass">

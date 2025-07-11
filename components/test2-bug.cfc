@@ -7,27 +7,27 @@ component {
 	 */
 	public array function getUserDetails(required numeric userID, required string dsn) {
 		var qryUser = queryExecute("
-			SELECT user_id
-				, username
-				, email
+			SELECT UserID
+				, UserName
+				, EmailAddress
 				, updated_at
-			FROM users
-			WHERE user_id = :userID
+			FROM Users
+			WHERE UserID = :userID
 		", {
 			userID: { value: arguments.userID, cfsqltype: "cf_sql_integer" }
 		}, { datasource: arguments.dsn });
 
 		var users = [];
 
-		qryUser.forEach(function(row) {
+		for (var i = 1; i <= qryUser.recordCount; i++) {
 			var userInfo = {};
-			userInfo.userID = row.user_id;
-			userInfo.username = row.username;
-			userInfo.email = row.email;
-			userInfo.lastUpdated = row.updated_at;
+			userInfo.userID = qryUser.UserID[i];
+			userInfo.username = qryUser.UserName[i];
+			userInfo.email = qryUser.EmailAddress[i];
+			userInfo.lastUpdated = qryUser.updated_at[i];
 
 			arrayAppend(users, userInfo);
-		});
+		}
 
 		return users;
 	}

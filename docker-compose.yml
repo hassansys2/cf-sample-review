@@ -29,7 +29,7 @@ services:
     build: .
     container_name: cf-test-server
     ports:
-      - "8080:8080"
+      - "8080:8888"
     volumes:
       - .:/var/www
     environment:
@@ -46,7 +46,7 @@ services:
     networks:
       - cf-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8888/"]
       interval: 30s
       timeout: 10s
       retries: 3

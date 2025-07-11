@@ -8,10 +8,10 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .test { margin: 10px 0; padding: 10px; border-radius: 3px; }
-        .pass { background-color: #d4edda; border-left: 4px solid #28a745; }
-        .fail { background-color: #f8d7da; border-left: 4px solid #dc3545; }
-        .info { background-color: #d1ecf1; border-left: 4px solid #17a2b8; }
-        pre { background: #f8f9fa; padding: 8px; border-radius: 3px; font-size: 12px; }
+        .pass { background-color: ##d4edda; border-left: 4px solid ##28a745; }
+        .fail { background-color: ##f8d7da; border-left: 4px solid ##dc3545; }
+        .info { background-color: ##d1ecf1; border-left: 4px solid ##17a2b8; }
+        pre { background: ##f8f9fa; padding: 8px; border-radius: 3px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -35,7 +35,7 @@
     ]>
     
     <cfloop array="#maliciousInputs#" index="maliciousInput">
-        <cfset userComponent = createObject("component", "test1-code_review")>
+        <cfset userComponent = createObject("component", "components.test1-code_review")>
         <cftry>
             <cfset result = userComponent.getUserByUsername(maliciousInput, testDSN)>
             <div class="pass">
@@ -57,7 +57,7 @@
         <p>Testing that all variables are properly scoped</p>
     </div>
     
-    <cfset bugComponent = createObject("component", "test2-bug")>
+    <cfset bugComponent = createObject("component", "components.test2-bug")>
     <cftry>
         <cfset result = bugComponent.getUserDetails(1, testDSN)>
         <div class="pass">
@@ -78,7 +78,7 @@
         <p>Testing that the N+1 query problem is resolved</p>
     </div>
     
-    <cfset perfComponent = createObject("component", "test3-performance")>
+    <cfset perfComponent = createObject("component", "components.test3-performance")>
     <cftry>
         <cfset startTime = getTickCount()>
         <cfset result = perfComponent.getRecentActivitiesWithUsernames(5, testDSN)>
@@ -104,7 +104,7 @@
     </div>
     
     <cftry>
-        <cfset userComponent = createObject("component", "test1-code_review")>
+        <cfset userComponent = createObject("component", "components.test1-code_review")>
         <cfset result1 = userComponent.getUserByID(1, testDSN)>
         <cfset result2 = userComponent.getUserByUsername("test", testDSN)>
         

@@ -58,7 +58,7 @@
         <cfset testUserID = 1>
         <cfset testDSN = "cftest">
         
-        <cfset userComponent = createObject("component", "test1-code_review")>
+        <cfset userComponent = createObject("component", "components.test1-code_review")>
         
         <cfset startTime = getTickCount()>
         <cftry>
@@ -132,7 +132,7 @@
     <div class="test-section">
         <h2>Test 3: Bug Component (test2-bug.cfc)</h2>
         
-        <cfset bugComponent = createObject("component", "test2-bug")>
+        <cfset bugComponent = createObject("component", "components.test2-bug")>
         
         <cftry>
             <cfset result = bugComponent.getUserDetails(1, testDSN)>
@@ -159,7 +159,7 @@
     <div class="test-section">
         <h2>Test 4: Performance Component (test3-performance.cfc)</h2>
         
-        <cfset perfComponent = createObject("component", "test3-performance")>
+        <cfset perfComponent = createObject("component", "components.test3-performance")>
         
         <cftry>
             <cfset startTime = getTickCount()>

@@ -10,10 +10,6 @@ RUN apt-get update && apt-get install -y wget mysql-client && \
 # Copy all files to the web directory
 COPY . /var/www/
 
-# Copy datasource configuration script
-COPY configure-datasource.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/configure-datasource.sh
-
 # Expose port 8080
 EXPOSE 8080
 
@@ -22,7 +18,7 @@ WORKDIR /var/www
 
 # Health check to ensure server is running
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+  CMD curl -f http://localhost:8888/ || exit 1
 
-# Default command to start Lucee with datasource configuration
-CMD ["/usr/local/bin/configure-datasource.sh"] 
+# Default command to start Lucee
+CMD ["catalina.sh", "run"] 
