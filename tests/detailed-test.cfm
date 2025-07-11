@@ -621,7 +621,7 @@
     </div>
 
     <!--- Footer --->
-    <div style="margin-top: 30px; padding: 10px; background: #f8f9fa; border-radius: 5px; text-align: center;">
+    <div style="margin-top: 30px; padding: 10px; background: ##f8f9fa; border-radius: 5px; text-align: center;">
         <p><strong>Detailed Test Completed:</strong> #dateFormat(now(), "yyyy-mm-dd")# #timeFormat(now(), "HH:mm:ss")#</p>
         <p>All components have been thoroughly analyzed with detailed logging</p>
     </div>
