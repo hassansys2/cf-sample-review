@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# ColdFusion Code Test - Automated Build and Test Script
-# This script builds the Docker environment and runs all tests automatically
+# ColdFusion Code Test - Fully Automated Build, Test, and Cleanup
+# This script builds the Docker environment, runs all tests, and automatically cleans up
 
 set -e  # Exit on any error
 
-echo "🚀 Starting ColdFusion Code Test - Automated Build and Test"
-echo "=========================================================="
+echo "🚀 Starting ColdFusion Code Test - Fully Automated Build, Test, and Cleanup"
+echo "========================================================================"
 
 # Colors for output
 RED='\033[0;31m'
@@ -36,25 +36,32 @@ print_error() {
 check_docker() {
     print_status "Checking Docker availability..."
     if ! docker info > /dev/null 2>&1; then
-        print_error "Docker is not running or not available"
+        print_error "Docker is not running or not accessible"
         exit 1
     fi
     print_success "Docker is available"
 }
 
-# Function to clean up any existing containers
+# Function to cleanup existing containers
 cleanup() {
     print_status "Cleaning up any existing containers..."
-    docker-compose down --remove-orphans > /dev/null 2>&1 || true
-    print_success "Cleanup completed"
+    if docker-compose down --remove-orphans --volumes > /dev/null 2>&1; then
+        print_success "Cleanup completed"
+    else
+        print_warning "No existing containers to clean up"
+    fi
 }
 
-# Function to build and start containers
+# Function to build and start environment
 build_environment() {
     print_status "Building and starting Docker environment..."
     
-    # Build and start containers
-    docker-compose up -d --build
+    if docker-compose up -d --build; then
+        print_success "Docker environment started successfully"
+    else
+        print_error "Failed to start Docker environment"
+        exit 1
+    fi
     
     print_status "Waiting for containers to be ready..."
     sleep 10
@@ -183,42 +190,33 @@ generate_report() {
         <p><strong>Test Date:</strong> $(date)</p>
         <p><strong>Environment:</strong> Docker with Lucee ColdFusion and MySQL</p>
         <p><strong>Status:</strong> All tests completed successfully</p>
+        <p><strong>Mode:</strong> Fully automated build-test-cleanup</p>
     </div>
     
     <div class="test-section">
         <h2>Component Tests</h2>
-        <iframe src="http://localhost:8080/tests/simple-test.cfm" width="100%" height="600" frameborder="0"></iframe>
+        <p>Component compilation tests completed successfully.</p>
     </div>
     
     <div class="test-section">
         <h2>Unit Tests</h2>
-        <iframe src="http://localhost:8080/tests/unit-tests.cfm" width="100%" height="600" frameborder="0"></iframe>
+        <p>Security, scope, and performance tests completed successfully.</p>
     </div>
     
     <div class="test-section">
         <h2>Database Tests</h2>
-        <iframe src="http://localhost:8080/tests/database-test.cfm" width="100%" height="600" frameborder="0"></iframe>
+        <p>Database integration tests completed successfully.</p>
     </div>
     
     <div class="test-section">
         <h2>Comprehensive Tests</h2>
-        <iframe src="http://localhost:8080/tests/test-runner.cfm" width="100%" height="600" frameborder="0"></iframe>
+        <p>All comprehensive tests completed successfully.</p>
     </div>
 </body>
 </html>
 EOF
     
     print_success "Test report generated: $report_file"
-    print_status "You can open this file in your browser to view detailed results"
-}
-
-# Function to show container status
-show_status() {
-    print_status "Container Status:"
-    docker-compose ps
-    
-    print_status "Container Logs (last 10 lines):"
-    docker-compose logs --tail=10
 }
 
 # Function to cleanup containers
@@ -242,7 +240,7 @@ cleanup_after_tests() {
 # Main execution
 main() {
     echo ""
-    print_status "Starting automated build and test process..."
+    print_status "Starting fully automated build, test, and cleanup process..."
     
     # Check prerequisites
     check_docker
@@ -257,36 +255,20 @@ main() {
     if run_tests; then
         print_success "All tests passed successfully!"
         generate_report
-        show_status
         echo ""
         print_success "🎉 ColdFusion Code Test completed successfully!"
-        print_status "Access the test results at:"
-        print_status "  - http://localhost:8080/tests/test-runner.cfm"
-        print_status "  - http://localhost:8080/tests/unit-tests.cfm"
-        print_status "  - http://localhost:8080/tests/simple-test.cfm"
-        print_status "  - http://localhost:8080/tests/database-test.cfm"
+        print_status "Test report generated. Cleaning up containers..."
         
-        # Ask user if they want to keep containers running
-        echo ""
-        read -p "Do you want to keep the containers running for manual testing? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            cleanup_after_tests
-            print_status "Containers cleaned up. You can run './build-and-test.sh' again anytime."
-        else
-            print_status "Containers kept running. Use './cleanup.sh' to stop them later."
-        fi
+        # Always cleanup after successful tests
+        cleanup_after_tests
+        
+        print_success "✅ Build-Test-Cleanup cycle completed successfully!"
+        print_status "All containers cleaned up. System resources freed."
     else
         print_error "❌ Some tests failed!"
-        show_status
         echo ""
-        read -p "Do you want to keep the containers running for debugging? (y/N): " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            cleanup_after_tests
-        else
-            print_status "Containers kept running for debugging. Use './cleanup.sh' to stop them later."
-        fi
+        print_status "Cleaning up containers due to test failures..."
+        cleanup_after_tests
         exit 1
     fi
 }
