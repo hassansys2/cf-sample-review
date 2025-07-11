@@ -18,7 +18,7 @@
     <h1>Unit Tests for Fixed ColdFusion Components</h1>
     
     <!--- Test Configuration --->
-    <cfset testDSN = "testDSN">
+    <cfset testDSN = "cftest">
     <cfset testResults = []>
     
     <!--- Test 1: Security Fix Test --->
